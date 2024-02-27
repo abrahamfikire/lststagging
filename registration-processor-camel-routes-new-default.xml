@@ -18,7 +18,25 @@
             </otherwise>
         </choice>
     </route>
-
+    <!-- securezone-notification to packet-uploader Route -->
+    <route id="securezone-notification-->packet-uploader new route">
+        <from uri="eventbus:securezone-notification-new-bus-out" />
+        <log
+                message="securezone-notification-->packet-uploader new route ${bodyAs(String)}" />
+        <choice>
+            <when>
+                <simple>${bodyAs(String)} contains '"isValid":true'</simple>
+                <to uri="eventbus:packet-uploader-bus-in" />
+            </when>
+            <when>
+                <simple>${bodyAs(String)} contains '"internalError":true'</simple>
+                <to uri="eventbus:retry-bus-in" />
+            </when>
+            <otherwise>
+                <to uri="eventbus:error-bus-in" />
+            </otherwise>
+        </choice>
+    </route>
     <!-- packet-uploader to packet-validator Route -->
     <route id="packet-uploader-->packet-validator new route">
     <from uri="eventbus:packet-uploader-new-bus-out" />
@@ -38,15 +56,15 @@
             </otherwise>
         </choice>
     </route>
-    <!-- Packet Validator to Packet classifier Route -->
-    <route id="packet-validator-->packet-classifier new route">
+    <!-- Packet Validator to Quality Checker -->
+    <route id="packet-validator-->demo-dedupe new route">
         <from uri="eventbus:packet-validator-new-bus-out" />
         <log
-            message="packet-validator-->packet-classifier new route ${bodyAs(String)}" />
+            message="packet-validator-->quality-checker new route ${bodyAs(String)}" />
         <choice>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":true'</simple>
-                <to uri="eventbus:packet-classifier-bus-in" />
+                <to uri="eventbus:demo-dedupe-bus-in" />
             </when>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":false' and ${bodyAs(String)} contains '"internalError":false'</simple>
@@ -61,37 +79,14 @@
             </otherwise>
         </choice>
     </route>
-    <!-- Packet Classifier to Quality Checker Route -->
-    <route id="packet-classifier-->quality-checker new route">
-        <from uri="eventbus:packet-classifier-new-bus-out" />
-        <log
-            message="packet-classifier-->quality-checker new route ${bodyAs(String)}" />
-        <choice>
-            <when>
-                <simple>${bodyAs(String)} contains '"isValid":true'</simple>
-                <to uri="eventbus:quality-checker-bus-in" />
-            </when>
-            <when>
-                <simple>${bodyAs(String)} contains '"isValid":false' and ${bodyAs(String)} contains '"internalError":false'</simple>
-                <to uri="eventbus:message-sender-bus-in" />
-            </when>
-            <when>
-                <simple>${bodyAs(String)} contains '"internalError":true'</simple>
-                <to uri="eventbus:retry-bus-in" />
-            </when>
-            <otherwise>
-                <to uri="eventbus:error-bus-in" />
-            </otherwise>
-        </choice>
-    </route>
-    <route id="quality-checker-->osi-validator new route">
+    <route id="quality-checker-->demo-dedupe new route">
         <from uri="eventbus:quality-checker-new-bus-out" />
         <log
-            message="quality-checker-->osi-validator new route ${bodyAs(String)}" />
+            message="quality-checker-->demo-dedupe  new route ${bodyAs(String)}" />
         <choice>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":true'</simple>
-                <to uri="eventbus:o-s-i-validator-bus-in" />
+                <to uri="eventbus:demo-dedupe-bus-in" />
             </when>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":false' and ${bodyAs(String)} contains '"internalError":false'</simple>
@@ -106,32 +101,10 @@
             </otherwise>
         </choice>
     </route>
-    <route id="osi-validator-->external-stage new route">
+    <route id="osi-validator-->demo-dedupe new route">
         <from uri="eventbus:o-s-i-validator-new-bus-out" />
         <log
-            message="osi-validator-->external-stage new route ${bodyAs(String)}" />
-        <choice>
-            <when>
-                <simple>${bodyAs(String)} contains '"isValid":true'</simple>
-                <to uri="eventbus:external-bus-in" />
-            </when>
-            <when>
-                <simple>${bodyAs(String)} contains '"isValid":false' and ${bodyAs(String)} contains '"internalError":false'</simple>
-                <to uri="eventbus:message-sender-bus-in" />
-            </when>
-            <when>
-                <simple>${bodyAs(String)} contains '"internalError":true'</simple>
-                <to uri="eventbus:retry-bus-in" />
-            </when>
-            <otherwise>
-                <to uri="eventbus:error-bus-in" />
-            </otherwise>
-        </choice>
-    </route>
-    <route id="external-stage-->demo-dedupe new route">
-        <from uri="eventbus:external-new-bus-out" />
-        <log
-                message="external-stage-->demo-dedupe new route ${bodyAs(String)}" />
+                message="osi-validator-->demo-dedupe new route ${bodyAs(String)}" />
         <choice>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":true'</simple>
@@ -161,7 +134,7 @@
             </when>
 			<when>
                 <simple>${bodyAs(String)} contains '"address":"manual-verification-bus-in"'</simple>
-                <to uri="vertx:manual-verification-bus-in" />
+                <to uri="eventbus:manual-verification-bus-in" />
             </when>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":false' and ${bodyAs(String)} contains '"internalError":false'</simple>
@@ -210,7 +183,7 @@
             </when>
             <when>
                 <simple>${bodyAs(String)} contains '"address":"manual-verification-bus-in"'</simple>
-                <to uri="vertx:manual-verification-bus-in" />
+                <to uri="eventbus:manual-verification-bus-in" />
             </when>
             <when>
                 <simple>${bodyAs(String)} contains '"internalError":true'</simple>
