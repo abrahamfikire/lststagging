@@ -9,6 +9,15 @@
 		"gender": {
 			"value": "gender"
 		},
+		"fullName": {
+                        "value": "name"
+                },
+               "fullName": {
+                    "value": "fullName"
+                },
+		"birthdate": {
+			"value": "dateOfBirth"
+		},
 		"dob": {
 			"value": "dateOfBirth"
 		},
@@ -30,6 +39,9 @@
 		"phone": {
 			"value": "phone"
 		},
+                "picture": {
+                        "value": "face"
+                },
 		"phoneNumber": {
 			"value": "phone"
 		},
@@ -41,6 +53,12 @@
 		},
 		"uin": {
 			"value": "UIN"
+		},
+		"vid": {
+			"value": "VID"
+		},
+		"individual_id": {
+			"value": "individual_id"
 		},
 		"individualBiometrics": {
 			"value": "individualBiometrics"
@@ -79,7 +97,7 @@
 			"value": "region"
 		},
 		"fullName": {
-			"value": "firstName,middleName,lastName"
+			"value": "fullName"
 		},
 		"fullAddress": {
 			"value": "kebele,woreda,zone,region"

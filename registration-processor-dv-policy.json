@@ -1,0 +1,15 @@
+{
+    "policyName":"dv-policy-tele",
+    "description":"Tele DV Sampling Policy",
+    "organizationName":"Tele",
+    "version":"1.0",
+    "agentCode":"1001",
+    "policy":{
+        "maxPerDay":0,
+        "center":[],
+        "machine":[],
+        "officer":[],
+        "nationality":[],
+        "ageRange":{} 
+    }
+}
