@@ -107,16 +107,16 @@
             </otherwise>
         </choice>
     </route>
-
+    
     <!-- Packet Validator to Quality Checker -->
-    <route id="packet-validator-->demo-dedupe new route">
+    <route id="packet-validator-->quality-checker new route">
         <from uri="eventbus:packet-validator-new-bus-out" />
         <log
             message="packet-validator-->quality-checker new route ${bodyAs(String)}" />
         <choice>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":true'</simple>
-                <to uri="eventbus:demo-dedupe-bus-in" />
+                <to uri="eventbus:quality-checker-bus-in" />
             </when>
             <when>
                 <simple>${bodyAs(String)} contains '"isValid":false' and ${bodyAs(String)} contains '"internalError":false'</simple>
@@ -131,6 +131,8 @@
             </otherwise>
         </choice>
     </route>
+    
+    
     <route id="quality-checker-->demo-dedupe new route">
         <from uri="eventbus:quality-checker-new-bus-out" />
         <log
